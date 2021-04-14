@@ -32,9 +32,9 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.ngb.onSave$
+    this.ngb.onTemplateCreated$
       .pipe(
-        exhaustMap(({ email, template }) =>
+        exhaustMap(([email, template]) =>
           this.apiService.saveEmail(email, template)
         ),
         takeUntil(this.componentDestroyed$)
