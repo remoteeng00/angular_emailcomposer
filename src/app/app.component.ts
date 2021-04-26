@@ -19,17 +19,22 @@ export class AppComponent implements OnInit, OnDestroy {
   title = "emailcomposer";
 
   private componentDestroyed$ = new Subject();
+  private clientSlug: string; 
+
+
 
   currentEmail$ = this.route.paramMap.pipe(
-    map(params => params.get("id")),
-    exhaustMap(id => this.apiService.getEmail(id))
+    map(params => params.get("uuid")),
+    exhaustMap(id => this.apiService.getEmail(id, this.clientSlug))
   );
 
   constructor(
     private ngb: IpEmailBuilderService,
     private apiService: ApiService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.clientSlug = this.route.snapshot.params.client;
+  }
 
   ngOnInit() {
     this.ngb.onTemplateCreated$
