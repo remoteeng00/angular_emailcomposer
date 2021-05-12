@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { startWith } from "rxjs/operators";
+import { map, startWith } from "rxjs/operators";
 import { IPEmail } from "ip-email-builder";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { config } from '../ng-config/development';
@@ -15,15 +15,39 @@ export class ApiService {
 
   constructor(private http: HttpClient) {} 
 
-  saveEmail(email: IPEmail, template: string) {
+  saveEmail(email: IPEmail, template: string, uuid: string, clientSlug: string, dbName: string, clientId: string) {
     // email is the Object you need to save in order to edit it later
     // template is the HTML ready to use
-    return this.http.post("/abc", null, null);
+    const options = { 
+      params: new HttpParams().set('_i', uuid).set('_cs', clientSlug).set('_dn', dbName).set('_ci', clientId),
+      
+    };
+    const body = { 
+      _i: uuid,
+      _cs: clientSlug,
+      _dn: dbName,
+      _ci: clientId,
+      email: email,
+      template: template
+    };
+    return this.http.post(this.configuration.apiPath + "save", body, options);
   }
 
-  getEmail(id: string, clientName: string): Observable<IPEmail> {
+  uploadImage(imagepath: string) {
+    // email is the Object you need to save in order to edit it later
+    // template is the HTML ready to use
+    
+    return this.http.post(this.configuration.apiPath + "save", imagepath);
+  }
+
+  getMergeTags(){
+    return this.http.get(this.configuration.apiPath + "mergetags/get");
+  }
+
+
+  getEmail(uuid: string, clientSlug: string, dbName: string, clientId: string): Observable<IPEmail> {
     const options = { 
-      params: new HttpParams().set('uuid', id)
+      params: new HttpParams().set('_i', uuid).set('_cs', clientSlug).set('_dn', dbName).set('_ci', clientId)
     };
     return this.http.get<IPEmail>(this.configuration.apiPath + "get", options).pipe(
       startWith(new IPEmail())

@@ -1,21 +1,26 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ApiService } from "./api.service";
+import { ApiService } from "../../api.service";
 import { Subject } from "rxjs";
 import {
   IpEmailBuilderService,
+  IpUserRestApiService,
   Structure,
   TextBlock,
-  IPEmail
+  IPEmail,
+  deferOf
 } from "ip-email-builder";
 import { map, catchError, exhaustMap, takeUntil } from "rxjs/operators";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: "my-app",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"]
+  selector: 'app-new',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+
+
+export class EditComponent implements OnInit, OnDestroy  {
+
   title = "emailcomposer";
 
   private componentDestroyed$ = new Subject();
@@ -29,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private ngb: IpEmailBuilderService,
+    private urs: IpUserRestApiService,
     private apiService: ApiService,
     private route: ActivatedRoute
   ) {
@@ -39,6 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.dbName = params._dn;
         this.clientId = params._ci;
         this.currentEmail$ = this.apiService.getEmail(this.uuid, this.clientSlug, this.dbName, this.clientId);
+        urs.getAllUserMergeFields$ = deferOf(['{{PERSON_FNAME}}', '{{PERSON_LNAME}}', '{{PERSON_PHONE}}', '{{PERSON_EMAIL}}', '{{SALESPERSON_EMAIL}}', '{{SALESPERSON_FNAME}}', '{{SALESPERSON_LNAME}}', '{{COMPANY_NAME}}', '{{COMPANY_WEB_URL}}', '{{COMPANY_EMAIL}}', '{{UNSUBSCRIBE_URL}}']);
       });
       
   }
@@ -52,9 +59,11 @@ export class AppComponent implements OnInit, OnDestroy {
         takeUntil(this.componentDestroyed$)
       )
       .subscribe(() => console.log("Email and Template saved."));
+
   }
 
   ngOnDestroy() {
     // cleanup logic goes here
-  }
+  } 
+
 }

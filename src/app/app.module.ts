@@ -2,35 +2,45 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { MyApiServiceService } from "./my-api-service.service";
+import { MyUploaderImageService } from "./my-uploader-image.service";
+//    import { RouterModule, Routes } from '@angular/router';
 import { 
   IpEmailBuilderModule, 
-  IpUserRestApiService,
-  IpUserImageUploaderService, 
-  IpUserMiddlewaresService
+  IpUserImageUploaderService
+  //IpUserImageUploaderService, 
+  //IpUserMiddlewaresService
 } from 'ip-email-builder';
 
 import { AppComponent } from './app.component';
-import { RewritedImageUploader } from './rewrited-image-uploader.service';
-import { CustomIpMiddlewares } from './custom-middleware.service';
-import { ApiService } from './api.service';
+import { AppRoutingModule } from './app-routing.module';
+import { NewComponent } from './template/new/new.component';
+import { EditComponent } from './template/edit/edit.component';
+import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
   imports:      [
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot([]),
+    AppRoutingModule,
     IpEmailBuilderModule.withConfig({
-      xApiKey: "TMf0v2r8BJ6fy0eL4ztyn2D7E7SJz4tfRtfYDMbc"
+      xApiKey: "TMf0v2r8BJ6fy0eL4ztyn2D7E7SJz4tfRtfYDMbc",
+      uploadImagePath: "http://b326f60d361f.ngrok.io/apis/ng_uploadimage.php",
+      uploadImageName: "test",
     })
   ],
   providers: [
-    { provide: IpUserRestApiService, useClass: ApiService },
-    { provide: IpUserImageUploaderService, useClass: RewritedImageUploader },
-    { provide: IpUserMiddlewaresService, useClass: CustomIpMiddlewares }
+    //{ provide: IpUserRestApiService, useClass: MyApiServiceService }
+    //{ provide: IpUserImageUploaderService, useClass: MyUploaderImageService }
   ],
-  declarations: [ AppComponent ],
+  declarations: [ 
+    AppComponent,
+    NewComponent,
+    EditComponent,
+    PageNotFoundComponent
+  ],
+
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
