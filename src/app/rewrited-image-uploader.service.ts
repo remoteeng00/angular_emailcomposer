@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { of, defer } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import {defer, of} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
-import { IpUserImageUploaderService } from 'ip-email-builder';
+import {IpUserImageUploaderService} from 'ip-email-builder';
 // import { IpUserImageUploaderService } from 'projects/ip-email-builder/src/public_api';
 
 // @Injectable()
